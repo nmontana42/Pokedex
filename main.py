@@ -5,7 +5,7 @@ import re
 
 #open the pokedex data (retrieved from dataworld)
 def open_csv():
-    with open("I:\Python Projects\Python SQL\pokemon.csv") as pokemon_data:
+    with open("I:\Python Projects\Pokedex\pokemon.csv") as pokemon_data:
         Pokemon_reader = csv.reader(pokemon_data, delimiter = ',')
         pokemon_list = list(Pokemon_reader)
         pokemon_sql = pokemon_list[1:]
@@ -45,7 +45,13 @@ def create_connection(db_file):
 def user_input():
     global response
 
-    print("Welcome to the pokedex. Request information.")
+    print("Welcome to the pokedex!\nAt the moment you may request this information:")
+    print("1: Enter a known Pokemon name")
+    print("2: Enter a known Pokemon type")
+    print("3: Enter 'generation 1-6' to get all Pokemon from a certain generation")
+    print("4: Enter '(type) pokemon from generation 1-6' to get a certain type from a certain generation. ")
+    print("5: Enter 'legendaries' to get all legendary pokemon")
+    
     response = input()
     return True
     return response
@@ -266,6 +272,7 @@ def main():
             find_function_two(conn, name_sel, name_requested, name_constraint)
             find_order_requests(conn, order_requested, order_constraint, stat_constraint, stat_requested, sa_sel, sd_sel,
                         speed_sel, hp_sel, def_sel, att_sel, total_sel)
+            print("\n")
 
     else:
         print("Error! cannot create the database connection.")
