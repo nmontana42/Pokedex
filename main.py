@@ -14,7 +14,7 @@ def open_csv():
 pokemon = open_csv()
 
 def declare_lists(pokemon):
-    global type_list, gen_list, order, leg, names, stat_list
+    global type_list, gen_list, order, leg, names, stat_list, stats
 
     type_list = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying", "Ghost", "Grass",
              "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Steel", "Water"]
@@ -28,9 +28,10 @@ def declare_lists(pokemon):
 
     for row in pokemon:
         names.append(row[1])
-    
-    
 
+    keys = ['type 1', 'type 2', 'total', 'HP', 'attack', 'defense', 'special attack', 'special defense', 'speed', 'generation']
+    stats = dict.fromkeys(keys, None)
+    
 #Create the connection to sqlite
 def create_connection(db_file):
     conn = None
@@ -42,15 +43,18 @@ def create_connection(db_file):
     return conn
 
 #user input
-def user_input():
+def user_input(type_list, gen_list, stat_list):
     global response
 
     print("Welcome to the pokedex!\nAt the moment you may request this information:")
     print("1: Enter a known Pokemon name")
-    print("2: Enter a known Pokemon type")
-    print("3: Enter 'generation 1-6' to get all Pokemon from a certain generation")
+    print("2: Enter a known Pokemon type\n")
+    print("Type options:",type_list, "\n")
+    print("3: Enter a generation number to get all Pokemon from a certain generation\n")
+    print("Generation options:", gen_list, "\n")
     print("4: Enter '(type) pokemon from generation 1-6' to get a certain type from a certain generation. ")
-    print("5: Enter 'legendaries' to get all legendary pokemon")
+    print("5: Enter 'legendaries' to get all legendary pokemon or 'legendaries' from a certain generation\n")
+    print("6: Enter a pokemon stat to get the top 10 pokemon with the highest of the specified stat\n")
     
     response = input()
     return True
@@ -206,14 +210,18 @@ def find_function_one(conn, gen_sel, generation_requested, gen_constraint, type_
 #Find more requests
 def find_function_two(conn, name_sel, name_requested, name_constraint):
     cur = conn.cursor()
-
-
+    
     if name_constraint is True:
         print('Name Request:', name_requested)
+        print("\nstats:")
         cur.execute(name_sel, (name_requested,))
         record = cur.fetchall()
         for row in record:
-            print("types, total, attack, defense, special attack, special defense, speed, and generation: \n",  row)
+            stat_dict = {'type 1': row[0], 'type 2': row[1], 'total': row[2],'HP':row[3], 'attack':row[4], 'defense':row[5], 'special attack':row[6], 'special defense':row[7],
+                         'speed':row[8], 'generation':row[9]}
+            for i in stat_dict.items():
+                print(i)
+        print("\n\n\n")
         
 def find_order_requests(conn, order_requested, order_constraint, stat_constraint, stat_requested, sa_sel, sd_sel,
                         speed_sel, hp_sel, def_sel, att_sel, total_sel):
@@ -263,7 +271,7 @@ def main():
     declare_lists(pokemon)
     conn = create_connection(database)
     if conn is not None:
-        while user_input() == True:
+        while user_input(type_list, gen_list, stat_list) == True:
             find_constraints(conn, response, type_list, gen_list, names)
             find_stat_constraints(conn, response, stat_list, order)
             declare_variables(response)
