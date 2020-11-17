@@ -45,14 +45,14 @@ def create_connection(db_file):
 #user input
 def user_input(type_list, gen_list, stat_list):
     global response
-
-    print("Welcome to the pokedex!\nAt the moment you may request this information:")
-    print("1: Enter a known Pokemon name")
-    print("2: Enter a known Pokemon type\n")
+    print("Helpful Information:\n")
     print("Type options:",type_list, "\n")
-    print("3: Enter a generation number to get all Pokemon from a certain generation\n")
     print("Generation options:", gen_list, "\n")
-    print("4: Enter '(type) pokemon from generation 1-6' to get a certain type from a certain generation. ")
+    print("User instructions:\n")
+    print("1: Enter a known Pokemon name\n")
+    print("2: Enter a known Pokemon type\n")
+    print("3: Enter a generation number to get all Pokemon from a certain generation\n")
+    print("4: Enter '(type) pokemon from generation 1-6' to get a certain type from a certain generation.\n")
     print("5: Enter 'legendaries' to get all legendary pokemon or 'legendaries' from a certain generation\n")
     print("6: Enter a pokemon stat to get the top 10 pokemon with the highest of the specified stat\n")
     
@@ -145,7 +145,7 @@ def find_stat_constraints(conn, resposne, order, stat_list):
         stat_constraint = True
         return stat_constraint, stat_requested
 
-def declare_variables(response):
+def declare_statements(response):
     #declare sql select statements
     global gen_sel, gentype_sel, type_sel, leg_sel, genleg_sel, typeleg_sel, name_sel, sa_sel, sd_sel, total_sel, att_sel, def_sel, speed_sel, hp_sel
 
@@ -274,7 +274,7 @@ def main():
         while user_input(type_list, gen_list, stat_list) == True:
             find_constraints(conn, response, type_list, gen_list, names)
             find_stat_constraints(conn, response, stat_list, order)
-            declare_variables(response)
+            declare_statements(response)
             find_function_one(conn, gen_sel, generation_requested, gen_constraint, type_requested, type_sel, gentype_sel, order, leg_sel, legend_constraint,
                  genleg_sel, genleg_constraint, typeleg_sel, typeleg_constraint)
             find_function_two(conn, name_sel, name_requested, name_constraint)
