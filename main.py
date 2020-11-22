@@ -3,7 +3,7 @@ import sqlite3
 from sqlite3 import Error
 import re
 
-#open the pokedex data (retrieved from dataworld)
+#open the pokedex data (retrieved from data.world)
 def open_csv():
     with open("I:\Python Projects\Pokedex\pokemon.csv") as pokemon_data:
         Pokemon_reader = csv.reader(pokemon_data, delimiter = ',')
@@ -13,6 +13,7 @@ def open_csv():
 
 pokemon = open_csv()
 
+#Manual entry of relavent data stored in lists
 def declare_lists(pokemon):
     global type_list, gen_list, order, leg, names, stat_list, stats
 
@@ -42,7 +43,8 @@ def create_connection(db_file):
         print(e)
     return conn
 
-#user input
+#This function prompts the user for input and returns it for later use
+#It also provides instructions for the user
 def user_input(type_list, gen_list, stat_list):
     global response
     print("Helpful Information:\n")
@@ -60,12 +62,16 @@ def user_input(type_list, gen_list, stat_list):
     return True
     return response
 
+#This function takes the response given by the user and reads it using regular expressions
+#The constraints are named accordingly below, if the regex module detects a certain word or phrase it will return a true boolean
+#It will also return a variable with a stored piece of data that will be used again (type_requested, generation requested, name_requested)
 def find_constraints(conn, response, type_list, gen_list, names):
     curr = conn.cursor()
 
     global gen_constraint, legend_constraint, type_constraint, gentype_constraint, generation_requested, type_requested
     global genleg_constraint, typeleg_constraint, name_constraint, name_requested 
-    
+
+    #Assign global variables to None
     type_requested = None
     generation_requested = None
     gen_constraint = None
@@ -77,7 +83,8 @@ def find_constraints(conn, response, type_list, gen_list, names):
     name_constraint = None
     name_requested = None
 
-    #Find user requests using regular expressions
+
+    #generations
     for generation_requested in gen_list:
         if re.search(generation_requested, response):
             gen_constraint = True
@@ -89,7 +96,7 @@ def find_constraints(conn, response, type_list, gen_list, names):
                 genleg_constraint = True
                 return genleg_constraint
             return gen_constraint, generation_requested
-    
+    #legendaries
     if re.search('legendar(ies)?', response, re.IGNORECASE):
         for type_requested in type_list:
             if re.search(type_requested, response, re.IGNORECASE):
@@ -97,14 +104,18 @@ def find_constraints(conn, response, type_list, gen_list, names):
                 return typeleg_constraint
         legend_constraint = True
         return legend_constraint
+    #types
     for type_requested in type_list:
         if re.search(type_requested, response, re.IGNORECASE):
             type_constraint = True
             return type_constraint, type_requested
+    #names
     for name_requested in names:
         if re.search(name_requested, response, re.IGNORECASE):
             name_constraint = True
             return name_constraint, name_requested
+
+
 def find_stat_constraints(conn, resposne, order, stat_list):
     global order_constraint, stat_constraint, order_requested, stat_requested
 
@@ -145,8 +156,8 @@ def find_stat_constraints(conn, resposne, order, stat_list):
         stat_constraint = True
         return stat_constraint, stat_requested
 
+#All the SQL select statements are stored in this function
 def declare_statements(response):
-    #declare sql select statements
     global gen_sel, gentype_sel, type_sel, leg_sel, genleg_sel, typeleg_sel, name_sel, sa_sel, sd_sel, total_sel, att_sel, def_sel, speed_sel, hp_sel
 
     gen_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE Generation = ?'''
@@ -165,7 +176,8 @@ def declare_statements(response):
     hp_sel = '''SELECT name, type_1, type_2, HP FROM pokemon ORDER BY HP DESC LIMIT 10'''
     return gen_sel, gentype_sel, type_sel, leg_sel, genleg_sel, typeleg_sel, name_sel, sa_sel, sd_sel, total_sel, att_sel, def_sel, speed_sel, hp_sel
 
-#Use regular expressions to analyze request
+#This function takes the constraints, request variables, and SQL select statements
+#It executes the SQL function then prints the data back to the user
 def find_function_one(conn, gen_sel, generation_requested, gen_constraint, type_requested, type_sel, gentype_sel, order, leg_sel, legend_constraint,
          genleg_sel, genleg_constraint, typeleg_sel, typeleg_constraint):
     cur = conn.cursor()
@@ -207,7 +219,7 @@ def find_function_one(conn, gen_sel, generation_requested, gen_constraint, type_
         for row in record:
             print(row)
 
-#Find more requests
+#Does the same thing as the previous function
 def find_function_two(conn, name_sel, name_requested, name_constraint):
     cur = conn.cursor()
     
@@ -222,7 +234,7 @@ def find_function_two(conn, name_sel, name_requested, name_constraint):
             for i in stat_dict.items():
                 print(i)
         print("\n\n\n")
-        
+      
 def find_order_requests(conn, order_requested, order_constraint, stat_constraint, stat_requested, sa_sel, sd_sel,
                         speed_sel, hp_sel, def_sel, att_sel, total_sel):
     cur = conn.cursor()
