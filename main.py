@@ -115,7 +115,7 @@ def find_constraints(conn, response, type_list, gen_list, names):
             name_constraint = True
             return name_constraint, name_requested
 
-
+#Reads response to find if user wants a stat
 def find_stat_constraints(conn, resposne, order, stat_list):
     global order_constraint, stat_constraint, order_requested, stat_requested
 
@@ -277,7 +277,7 @@ def find_order_requests(conn, order_requested, order_constraint, stat_constraint
             record = cur.fetchall()
             for row in record:
                 print(row)
-
+#Execute main
 def main():
     database = 'pokemon.db'
     declare_lists(pokemon)
