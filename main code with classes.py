@@ -30,17 +30,27 @@ class Search:
 
 class Find(Search):
 
-    def __init__(self, conn, Generation, Types, Statement):
-        self.Generation = Search(conn, response, Search.gen_list)
-        self.Types = Search(conn, response, Search.type_list)
+
+    def __init__(self, database, conn, request, statement):
+        self.request = request
         self.statement = statement
         self.conn = conn
+        self.database = database
+
+    def create_connection(db_file):
+        conn = None
+        try:
+            conn = sqlite3.connect(db_file)
+            return conn
+        except Error as e:
+            print(e)
+        return conn
 
         
     def sql_Generation(self):
         Search.regex(Generation)
         cur = self.conn.cursor()
-        if Generation.constraint is True:
+        if request.constraint is True:
             cur.execute(self.statement, (self.request,))
             record = cur.fetchall()
             for row in record:
@@ -53,15 +63,6 @@ class Find(Search):
             record = cur.fetchall()
             for row in record:
                 print(row)
-#Create the connection to sqlite
-def create_connection(db_file):
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-        return conn
-    except Error as e:
-        print(e)
-    return conn
 
 def user_input():
     global response
@@ -72,10 +73,12 @@ def user_input():
 
             
 def main():
-    database = 'pokemon.db'
     conn = create_connection(database)
     while user_input() == True:
-
+        Generation = Search(conn, response, Search.gen_list)
+        Types = Search(conn, response, Search.type_list)
+        test = Find(conn, Generation, '''SELECT name, type_1, type_2 FROM pokemon WHERE Generation = ?''')
+        Find.sql_Generation(Generation)
             
 if __name__ == '__main__':
     main()
