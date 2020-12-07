@@ -5,17 +5,30 @@ import re
 #Search finds base data, returns requests, constraints, executes SQL commands
 class Search:
 
+    gen_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE Generation = ?'''
+    type_sel = '''Select name, type_1, type_2 FROM pokemon WHERE (type_1 = ?) OR (type_2 = ?)'''
+
+
+
+
+
+
+
+
+
+
     type_list = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying", "Ghost", "Grass",
              "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Steel", "Water"]
     gen_list = ['1','2','3','4','5','6']
 
     stat_list = ["total", "HP", "Attack", "Defense", "Speed"]
 
-    def __init__(self, conn, response, data):
+    def __init__(self, conn, response, data, statement):
         self.response = response
         self.constraint = None
         self.data = data
         self.conn = conn
+        self.statement = statement
     def regex(self):
         for self.request in self.data:
             if re.search(self.request, self.response, re.IGNORECASE):
@@ -48,9 +61,9 @@ class Find(Search):
 
         
     def sql_Generation(self):
-        Search.regex(Generation)
+        Search.regex(self)
         cur = self.conn.cursor()
-        if request.constraint is True:
+        if self.constraint is True:
             cur.execute(self.statement, (self.request,))
             record = cur.fetchall()
             for row in record:
@@ -73,11 +86,10 @@ def user_input():
 
             
 def main():
-    conn = create_connection(database)
     while user_input() == True:
-        Generation = Search(conn, response, Search.gen_list)
-        Types = Search(conn, response, Search.type_list)
-        test = Find(conn, Generation, '''SELECT name, type_1, type_2 FROM pokemon WHERE Generation = ?''')
+        conn = Find.create_connection('pokemon.db')
+        Generation = Search(conn, response, Search.gen_list, Search.gen_sel)
+        Types = Search(conn, response, Search.type_list, Search.type_sel)
         Find.sql_Generation(Generation)
             
 if __name__ == '__main__':
