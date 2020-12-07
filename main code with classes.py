@@ -4,18 +4,14 @@ from sqlite3 import Error
 import re
 #Search finds base data, returns requests, constraints, executes SQL commands
 class Search:
-
+    #SQL select statements
     gen_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE Generation = ?'''
     type_sel = '''Select name, type_1, type_2 FROM pokemon WHERE (type_1 = ?) OR (type_2 = ?)'''
-
-
-
-
-
-
-
-
-
+    gentype_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Generation = ?)'''
+    leg_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE Legendary = "TRUE"'''
+    genleg_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE (Generation = ?) AND (Legendary = "TRUE")'''
+    typeleg_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Legendary = 'TRUE')'''
+    name_sel = '''SELECT type_1, type_2, total, HP, Attack, Defense, Sp_Atk, Sp_Def, Speed, Generation FROM pokemon WHERE (name = ?) '''
 
     type_list = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying", "Ghost", "Grass",
              "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Steel", "Water"]
@@ -60,22 +56,30 @@ class Find(Search):
         return conn
 
         
-    def sql_Generation(self):
+    def sql_Alpha(self):
         Search.regex(self)
         cur = self.conn.cursor()
         if self.constraint is True:
+            print("Data recorded")
             cur.execute(self.statement, (self.request,))
-            record = cur.fetchall()
-            for row in record:
-                print(row)
-    def sql_Types(self):
-        Search.regex(Types)
+            self.record = cur.fetchall()
+            return self.record
+    def sql_Bravo(self):
+        Search.regex(self)
         cur = self.conn.cursor()
-        if Types.constraint is True:
+        if self.constraint is True:
+            print("Data recorded")
             cur.execute(self.statement, (self.request, self.request))
-            record = cur.fetchall()
-            for row in record:
-                print(row)
+            self.record = cur.fetchall()
+            return self.record
+    def sql_Gamma(self):
+        Search.regex_Bravo(self)
+        cur = self.conn.cursor()
+        if self.constraint is True:
+            print("Data recorded")
+            cur.execute(self.statement)
+            self.record = cur.fetchall()
+            return self.record
 
 def user_input():
     global response
@@ -90,7 +94,17 @@ def main():
         conn = Find.create_connection('pokemon.db')
         Generation = Search(conn, response, Search.gen_list, Search.gen_sel)
         Types = Search(conn, response, Search.type_list, Search.type_sel)
-        Find.sql_Generation(Generation)
-            
+        Legendary = Search(conn, response, None, Search.leg_sel)
+        Find.sql_Alpha(Generation)
+        Find.sql_Bravo(Types)
+        Find.sql_Gamma(Legendary)
+        if Generation.constraint is True and Types.constraint is True:
+            print("Generation and Type")
+            cur = conn.cursor()
+            cur.execute(Search.gentype_sel, (Types.request, Types.request, Generation.request,))
+            record = cur.fetchall()
+            for row in record:
+                print(row)
+        Find.sql_Gamma(Legendary)
 if __name__ == '__main__':
     main()
