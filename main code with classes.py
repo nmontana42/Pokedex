@@ -2,6 +2,20 @@ import csv
 import sqlite3
 from sqlite3 import Error
 import re
+
+#open the pokedex data (retrieved from data.world)
+def open_csv():
+    with open("I:\Python Projects\Pokedex\pokemon.csv") as pokemon_data:
+        Pokemon_reader = csv.reader(pokemon_data, delimiter = ',')
+        pokemon_list = list(Pokemon_reader)
+        pokemon_sql = pokemon_list[1:]
+    return pokemon_sql
+names = []
+pokemon = open_csv()
+
+for row in pokemon:
+    names.append(row[1])
+
 #Search finds base data, returns requests, constraints, executes SQL commands
 class Search:
     #SQL select statements
