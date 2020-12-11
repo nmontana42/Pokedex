@@ -19,13 +19,13 @@ for row in pokemon:
 #Search finds base data, returns requests, constraints, executes SQL commands
 class Search:
     #SQL select statements
-    gen_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE Generation = ?'''
-    type_sel = '''Select name, type_1, type_2 FROM pokemon WHERE (type_1 = ?) OR (type_2 = ?)'''
-    gentype_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Generation = ?)'''
-    leg_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE Legendary = "TRUE"'''
-    genleg_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE (Generation = ?) AND (Legendary = "TRUE")'''
-    typeleg_sel = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Legendary = 'TRUE')'''
-    name_sel = '''SELECT type_1, type_2, total, HP, Attack, Defense, Sp_Atk, Sp_Def, Speed, Generation FROM pokemon WHERE (name = ?) '''
+    GEN_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE Generation = ?'''
+    TYPE_SELECT = '''Select name, type_1, type_2 FROM pokemon WHERE (type_1 = ?) OR (type_2 = ?)'''
+    GENTYPE_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Generation = ?)'''
+    LEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE Legendary = "TRUE"'''
+    GENLEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE (Generation = ?) AND (Legendary = "TRUE")'''
+    TYPE_LEG SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Legendary = 'TRUE')'''
+    NAME_SELECT = '''SELECT type_1, type_2, total, HP, Attack, Defense, Sp_Atk, Sp_Def, Speed, Generation FROM pokemon WHERE (name = ?) '''
 
     type_list = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying", "Ghost", "Grass",
              "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Steel", "Water"]
@@ -106,10 +106,10 @@ def user_input():
 def main():
     while user_input() == True:
         conn = Find_Data.create_connection('pokemon.db')
-        Generation = Search(conn, response, Search.gen_list, Search.gen_sel)
-        Types = Search(conn, response, Search.type_list, Search.type_sel)
-        Legendary = Search(conn, response, None, Search.leg_sel)
-        Names = Search(conn, response, names_list, Search.name_sel)
+        Generation = Search(conn, response, Search.gen_list, Search.GEN_SELECT)
+        Types = Search(conn, response, Search.type_list, Search.TYPE_SELECT)
+        Legendary = Search(conn, response, None, Search.LEG_SELECT)
+        Names = Search(conn, response, names_list, Search.NAME_SELECT)
         Find_Data.sql_Alpha(Generation)
         Find_Data.sql_Bravo(Types)
         Find_Data.sql_Gamma(Legendary)
@@ -117,7 +117,7 @@ def main():
         if Generation.constraint is True and Types.constraint is True:
             print("Generation and Type")
             cur = conn.cursor()
-            cur.execute(Search.gentype_sel, (Types.request, Types.request, Generation.request,))
+            cur.execute(Search.GENTYPE_SELECT, (Types.request, Types.request, Generation.request,))
             record = cur.fetchall()
             for row in record:
                 print(row)
