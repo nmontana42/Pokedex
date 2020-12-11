@@ -10,11 +10,11 @@ def open_csv():
         pokemon_list = list(Pokemon_reader)
         pokemon_sql = pokemon_list[1:]
     return pokemon_sql
-names = []
+names_list = []
 pokemon = open_csv()
 
 for row in pokemon:
-    names.append(row[1])
+    names_list.append(row[1])
 
 #Search finds base data, returns requests, constraints, executes SQL commands
 class Search:
@@ -51,7 +51,7 @@ class Search:
             self.constraint = True
             return self.constraint
 
-class Find(Search):
+class Find_Data(Search):
 
 
     def __init__(self, database, conn, request, statement):
@@ -105,13 +105,15 @@ def user_input():
             
 def main():
     while user_input() == True:
-        conn = Find.create_connection('pokemon.db')
+        conn = Find_Data.create_connection('pokemon.db')
         Generation = Search(conn, response, Search.gen_list, Search.gen_sel)
         Types = Search(conn, response, Search.type_list, Search.type_sel)
         Legendary = Search(conn, response, None, Search.leg_sel)
-        Find.sql_Alpha(Generation)
-        Find.sql_Bravo(Types)
-        Find.sql_Gamma(Legendary)
+        Names = Search(conn, response, names_list, Search.name_sel)
+        Find_Data.sql_Alpha(Generation)
+        Find_Data.sql_Bravo(Types)
+        Find_Data.sql_Gamma(Legendary)
+        Find_Data.sql_Alpha(Names)
         if Generation.constraint is True and Types.constraint is True:
             print("Generation and Type")
             cur = conn.cursor()
@@ -119,6 +121,6 @@ def main():
             record = cur.fetchall()
             for row in record:
                 print(row)
-        Find.sql_Gamma(Legendary)
+        Find_Data.sql_Gamma(Legendary)
 if __name__ == '__main__':
     main()
