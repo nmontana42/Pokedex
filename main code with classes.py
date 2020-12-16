@@ -51,6 +51,7 @@ class Search:
             self.constraint = True
             return self.constraint
 
+#Takes the search class, and its variables, to find and produce the data using sqllite3 functions
 class Find_Data(Search):
 
 
