@@ -5,7 +5,7 @@ import re
 
 #open the pokedex data (retrieved from data.world)
 def open_csv():
-    with open("I:\Python Projects\Pokedex\pokemon.csv") as pokemon_data:
+    with open("E:\Python Projects\Pokedex\pokemon.csv") as pokemon_data:
         Pokemon_reader = csv.reader(pokemon_data, delimiter = ',')
         pokemon_list = list(Pokemon_reader)
         pokemon_sql = pokemon_list[1:]
@@ -24,7 +24,7 @@ class Search:
     GENTYPE_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Generation = ?)'''
     LEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE Legendary = "TRUE"'''
     GENLEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE (Generation = ?) AND (Legendary = "TRUE")'''
-    TYPE_LEG SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Legendary = 'TRUE')'''
+    TYPE_LEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Legendary = 'TRUE')'''
     NAME_SELECT = '''SELECT type_1, type_2, total, HP, Attack, Defense, Sp_Atk, Sp_Def, Speed, Generation FROM pokemon WHERE (name = ?) '''
 
     type_list = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying", "Ghost", "Grass",
@@ -98,6 +98,17 @@ class Find_Data(Search):
 
 def user_input():
     global response
+
+    print("Helpful Information:\n")
+    print("Type options:", Search.type_list, "\n")
+    print("Generation options:", Search.gen_list, "\n")
+    print("User instructions:\n")
+    print("1: Enter a known Pokemon name\n")
+    print("2: Enter a known Pokemon type\n")
+    print("3: Enter a generation number to get all Pokemon from a certain generation\n")
+    print("4: Enter '(type) pokemon from generation 1-6' to get a certain type from a certain generation.\n")
+    print("5: Enter 'legendaries' to get all legendary pokemon or 'legendaries' from a certain generation\n")
+    print("6: Enter a pokemon stat to get the top 10 pokemon with the highest of the specified stat\n")
     
     response = input()
     return True
@@ -116,12 +127,26 @@ def main():
         Find_Data.sql_Gamma(Legendary)
         Find_Data.sql_Alpha(Names)
         if Generation.constraint is True and Types.constraint is True:
-            print("Generation and Type")
+            print("Generation | Type")
             cur = conn.cursor()
             cur.execute(Search.GENTYPE_SELECT, (Types.request, Types.request, Generation.request,))
             record = cur.fetchall()
             for row in record:
                 print(row)
-        Find_Data.sql_Gamma(Legendary)
+        elif Legendary.constraint is True and Generation.constraint is True:
+            print("Generation | Legendary")
+            cur = conn.cursor()
+            cur.execute(Search.GENLEG_SELECT, (Generation.request,))
+            record = cur.fetchall()
+            for row in record:
+                print(row)
+                
+
+        elif Generation.constraint is True:
+            for row in Generation.record:
+                print(row)
+        elif Types.constraint is True:
+            for row in Types.record:
+                print(row)
 if __name__ == '__main__':
     main()
