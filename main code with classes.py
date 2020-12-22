@@ -108,7 +108,6 @@ def user_input():
     print("3: Enter a generation number to get all Pokemon from a certain generation\n")
     print("4: Enter '(type) pokemon from generation 1-6' to get a certain type from a certain generation.\n")
     print("5: Enter 'legendaries' to get all legendary pokemon or 'legendaries' from a certain generation\n")
-    print("6: Enter a pokemon stat to get the top 10 pokemon with the highest of the specified stat\n")
     
     response = input()
     return True
@@ -147,6 +146,9 @@ def main():
                 print(row)
         elif Types.constraint is True:
             for row in Types.record:
+                print(row)
+        elif Names.constraint is True:
+            for row in Names.record:
                 print(row)
 if __name__ == '__main__':
     main()
