@@ -150,5 +150,8 @@ def main():
         elif Names.constraint is True:
             for row in Names.record:
                 print(row)
+        elif Legendary.constraint is True:
+            for row in Legendary.record:
+                print(row)
 if __name__ == '__main__':
     main()

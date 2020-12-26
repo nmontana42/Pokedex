@@ -8,6 +8,12 @@ Current functionalities:
 
 2. Typing in a pokemon type (i.e Rock, Dragon, Fire) displays pokemon of that type
 
+3. Typing 'Legengaries' will display all legendaries from generation 1 - 6
+
+	a. Users can specify type specific legendaries ("Fire legendaries")
+	b. Legendaries from a specific generation
+
+
  
 
 
