@@ -1,5 +1,16 @@
 # Pokedex is developed with Python's sqlite3 module with data retreived from data.world
 
+Project Objectives 
+
+A. Showcase proper use of classes
+
+B. Utilize SQL Select statements from a manually created DB file
+
+C. Understand basic data science concepts
+
+
+
+
 This program takes pokemon user input and analyzes it using SQL 
 
 Current functionalities:
