@@ -26,7 +26,7 @@ class Search:
     GENLEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE (Generation = ?) AND (Legendary = "TRUE")'''
     TYPE_LEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Legendary = 'TRUE')'''
     NAME_SELECT = '''SELECT type_1, type_2, total, HP, Attack, Defense, Sp_Atk, Sp_Def, Speed, Generation FROM pokemon WHERE (name = ?) '''
-
+    
     type_list = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying", "Ghost", "Grass",
              "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Steel", "Water"]
     gen_list = ['1','2','3','4','5','6']
@@ -158,7 +158,10 @@ def main():
                 print(row)
         elif Names.constraint is True:
             for row in Names.record:
-                print(row)
+                stat_dict = {'type 1': row[0], 'type 2': row[1], 'total': row[2],'HP':row[3], 'attack':row[4], 'defense':row[5], 'special attack':row[6], 'special defense':row[7],
+                         'speed':row[8], 'generation':row[9]}
+            for i in stat_dict.items():
+                print(i)
         elif Legendary.constraint is True:
             for row in Legendary.record:
                 print(row)
