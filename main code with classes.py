@@ -125,6 +125,8 @@ def main():
         Find_Data.sql_Bravo(Types)
         Find_Data.sql_Gamma(Legendary)
         Find_Data.sql_Alpha(Names)
+
+        #Generation and Types
         if Generation.constraint is True and Types.constraint is True:
             print("Generation | Type")
             cur = conn.cursor()
@@ -132,6 +134,7 @@ def main():
             record = cur.fetchall()
             for row in record:
                 print(row)
+        #Generation and Legendaries
         elif Legendary.constraint is True and Generation.constraint is True:
             print("Generation | Legendary")
             cur = conn.cursor()
@@ -139,7 +142,13 @@ def main():
             record = cur.fetchall()
             for row in record:
                 print(row)
-                
+        elif Legendary.constraint is True and Types.constraint is True:
+            print("Types | Legendary")
+            cur = conn.cursor()
+            cur.execute(Search.TYPE_LEG_SELECT, (Types.request, Types.request,))
+            record = cur.fetchall()
+            for row in record:
+                print(row)
 
         elif Generation.constraint is True:
             for row in Generation.record:
