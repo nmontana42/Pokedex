@@ -2,7 +2,7 @@
 
 Project Objectives 
 
-A. Showcase proper use of classes
+A. Showcase proper use of classes, methods, and objects
 
 B. Utilize SQL Select statements from a manually created DB file
 
@@ -25,7 +25,6 @@ Current functionalities:
 	b. Legendaries from a specific generation
 
 
- 
 
 
  

@@ -5,7 +5,7 @@ import re
 
 #open the pokedex data (retrieved from data.world)
 def open_csv():
-    with open("E:\Python Projects\Pokedex\pokemon.csv") as pokemon_data:
+    with open("I:\Python Projects\Pokedex\pokemon.csv") as pokemon_data:
         Pokemon_reader = csv.reader(pokemon_data, delimiter = ',')
         pokemon_list = list(Pokemon_reader)
         pokemon_sql = pokemon_list[1:]
@@ -26,6 +26,15 @@ class Search:
     GENLEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE (Generation = ?) AND (Legendary = "TRUE")'''
     TYPE_LEG_SELECT = '''SELECT name, type_1, type_2 FROM pokemon WHERE ((type_1 = ?) or (type_2 = ?)) AND (Legendary = 'TRUE')'''
     NAME_SELECT = '''SELECT type_1, type_2, total, HP, Attack, Defense, Sp_Atk, Sp_Def, Speed, Generation FROM pokemon WHERE (name = ?) '''
+
+    #Stat select statements
+    sa_sel = '''SELECT name, type_1, type_2, Sp_Atk FROM pokemon ORDER BY Sp_Atk (DESC (LIMIT = 10)'''
+    sd_sel = '''SELECT name, type_1, type_2, Sp_Def FROM pokemon ORDER BY Sp_Def (DESC (LIMIT =  10)'''
+    total_sel = '''SELECT name, type_1, type_2, total FROM pokemon ORDER BY total (DESC (LIMIT = 10)'''
+    att_sel = '''SELECT name, type_1, type_2, Attack FROM pokemon ORDER BY Attack (DESC (LIMIT = 10)'''
+    def_sel = '''SELECT name, type_1, type_2, Defense FROM pokemon ORDER BY Defense (DESC (LIMIT = 10)'''
+    speed_sel = '''SELECT name, type_1, type_2, Speed FROM pokemon ORDER BY Speed (DESC LIMIT =  10'''
+    hp_sel = '''SELECT name, type_1, type_2, HP FROM pokemon ORDER BY HP DESC LIMIT = 10'''
     
     type_list = ["Bug", "Dark", "Dragon", "Electric", "Fairy", "Fighting", "Fire", "Flying", "Ghost", "Grass",
              "Ground", "Ice", "Normal", "Poison", "Psychic", "Rock", "Steel", "Water"]
@@ -108,6 +117,7 @@ def user_input():
     print("3: Enter a generation number to get all Pokemon from a certain generation\n")
     print("4: Enter '(type) pokemon from generation 1-6' to get a certain type from a certain generation.\n")
     print("5: Enter 'legendaries' to get all legendary pokemon or 'legendaries' from a certain generation\n")
+    print("Or specific type legendaries")
     
     response = input()
     return True
