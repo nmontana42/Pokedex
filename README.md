@@ -8,6 +8,8 @@ B. Utilize SQL Select statements from a manually created DB file
 
 C. Understand basic data science concepts
 
+D. Gain an understanding of third party APIs
+
 
 
 
